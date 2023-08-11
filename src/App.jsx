@@ -26,18 +26,21 @@ const App = observer(() => {
 
 
   useEffect(() => {
-    const preventSwipeUp = event => {
-      if (event.touches[0].clientY < startY) {
+    const preventSwipe = event => {
+      const { clientY, deltaY } = event.touches[0];
+      
+      if (deltaY > 0 && clientY >= startY && clientY <= endY) {
         event.preventDefault();
       }
     };
 
-    const startY = window.innerHeight - 1; 
+    const startY = 10; // Начальная позиция для блокировки свайпа вверх
+    const endY = window.innerHeight - 10; // Позиция для блокировки свайпа вниз
 
-    window.addEventListener('touchmove', preventSwipeUp, { passive: false });
+    window.addEventListener('touchmove', preventSwipe, { passive: false });
 
     return () => {
-      window.removeEventListener('touchmove', preventSwipeUp);
+      window.removeEventListener('touchmove', preventSwipe);
     };
   }, []);
 
